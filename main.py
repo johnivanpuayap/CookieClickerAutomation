@@ -28,7 +28,7 @@ while time.time() < end_time:
                 click_this = product.find_element(By.TAG_NAME, 'b')
                 elements = click_this.text
                 amount = int(elements.split(' - ')[1].replace(',', ''))
-                if money > amount:
+                while money > amount:
                     product.click()
                     money -= amount
             except NoSuchElementException:
