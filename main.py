@@ -1,6 +1,6 @@
 import time
 from selenium import webdriver
-from selenium.common import NoSuchElementException
+from selenium.common import NoSuchElementException, StaleElementReferenceException
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
@@ -28,16 +28,21 @@ while time.time() < end_time:
                 click_this = product.find_element(By.TAG_NAME, 'b')
                 elements = click_this.text
                 amount = int(elements.split(' - ')[1].replace(',', ''))
-                while money > amount:
+                while money >= amount:
                     product.click()
                     money -= amount
             except NoSuchElementException:
-                print(f"Didn't find the element")
                 continue
             except IndexError:
+                continue
+            except StaleElementReferenceException:
                 continue
         last_action_time = current_time
 
     # Clicking the Cooking
     cookie_button = driver.find_element(By.ID, 'cookie')
     cookie_button.click()
+
+cookies_per_second = driver.find_element(By.ID, 'cps')
+print("Finished the automation!")
+print(f"Cookies per second: {cookies_per_second.text}")
